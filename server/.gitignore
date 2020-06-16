@@ -1,2 +1,2 @@
 #exclude node modules from git
-node_modules
+/node_modules
