@@ -1,1 +1,8 @@
-
+#searchTable {
+  position: absolute;
+  right: 0;
+  width: 33%;
+  background-color: white;
+  z-index: 999;
+  border: 2px solid rgb(2, 2, 17);
+}

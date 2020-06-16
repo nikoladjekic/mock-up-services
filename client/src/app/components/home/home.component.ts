@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MockUpService } from 'src/app/services/mock-up.service';
+import { Post } from 'src/app/models/post.model';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +9,17 @@ import { MockUpService } from 'src/app/services/mock-up.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  allPostsArr: Array<any> = [];
+  allPostsArr: Array<Post> = [];
+  searchTerm: string;
 
   constructor(private _service: MockUpService) {}
 
   ngOnInit(): void {
+    this.loadAllPosts();
+  }
+
+  // load the list of all posts
+  loadAllPosts(): void {
     this.allPostsArr = [];
     this._service.getPosts().subscribe((posts) => {
       this.allPostsArr = posts;

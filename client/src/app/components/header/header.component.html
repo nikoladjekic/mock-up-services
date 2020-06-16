@@ -10,14 +10,25 @@
 
   <a routerLink="new" routerLinkActive="active" class="nav-link text-light">Create New Post</a>
 
-
   <ul class="navbar-nav ml-auto">
     <div class="nav-item input-group alignInputGroup">
       <div class="input-group-prepend">
         <span class="input-group-text" id="input-icon"> <i class="fas fa-search"></i> </span>
       </div>
-      <input type="search" class="form-control" placeholder="Search for posts...">
+      <input type="search" class="form-control" placeholder="Search for posts..." [(ngModel)]="searchTerm"
+        (ngModelChange)="search($event)">
     </div>
   </ul>
 
 </nav>
+
+
+<!-- table with the search results -->
+<table id="searchTable" class="table table-hover" *ngIf="searchTerm">
+  <thead class="bg-dark text-light">Total matches: {{ searchResults.length }} </thead>
+  <tbody *ngFor="let post of searchResults">
+    <tr>
+      <td> {{ post.title }} </td>
+    </tr>
+  </tbody>
+</table>
