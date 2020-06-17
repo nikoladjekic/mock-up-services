@@ -11,8 +11,11 @@
   <ul class="navbar-nav ml-auto">
     <div class="nav-item input-group alignInputGroup">
       <div class="input-group-prepend">
-        <span class="input-group-text" id="input-icon"> <i class="fas fa-search"></i> </span>
+        <span *ngIf="!searchTerm" class="input-group-text" id="input-icon"> <i class="fas fa-search"></i> </span>
+        <span *ngIf="searchTerm" class="input-group-text cursor-pointer" id="close-icon" title="Dismiss"
+          (click)="exitSearch()"> <i class="fas fa-lg fa-times"></i> </span>
       </div>
+
       <input type="search" class="form-control" placeholder="Search for posts..." [(ngModel)]="searchTerm"
         (ngModelChange)="search($event)">
     </div>
@@ -24,7 +27,7 @@
 <!-- table with the search results -->
 <table id="searchTable" class="table table-hover" *ngIf="searchTerm">
   <thead class="bg-dark text-light">Total matches: {{ searchResults.length }} </thead>
-  <tbody *ngFor="let post of searchResults">
+  <tbody *ngFor="let post of searchResults" class="cursor-pointer">
     <tr>
       <td> {{ post.title }} </td>
     </tr>

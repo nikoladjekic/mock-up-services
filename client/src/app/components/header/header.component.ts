@@ -29,4 +29,8 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
+  exitSearch(): void {
+    this.searchTerm = '';
+  }
 }
