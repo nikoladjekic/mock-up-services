@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,8 +22,12 @@ import { MockUpService } from './services/mock-up.service';
     FormsModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
+    InfiniteScrollModule,
   ],
   providers: [MockUpService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+// for infinite scroll
+platformBrowserDynamic().bootstrapModule(AppModule);

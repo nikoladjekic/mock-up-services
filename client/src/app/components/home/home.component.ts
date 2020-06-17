@@ -12,11 +12,13 @@ import { Post } from 'src/app/models/post.model';
 export class HomeComponent implements OnInit {
   successMessage: boolean = false;
   successEdit: boolean = false;
-  errorMessage: boolean = false;
 
   allPostsArr: Array<Post> = [];
+  scrollArr: Array<Post> = [];
+
   editThisPost: Post;
   searchTerm: string;
+  page: number = 1;
 
   constructor(
     private _service: MockUpService,
@@ -24,7 +26,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadAllPosts();
+    this.loadEverything();
   }
 
   // load the list of all posts
@@ -39,9 +41,9 @@ export class HomeComponent implements OnInit {
 
   // remove specific post from the array
   deletePost(post): void {
-    const postToRemove = this.allPostsArr.indexOf(post);
+    const postToRemove = this.scrollArr.indexOf(post);
     if (postToRemove > -1) {
-      this.allPostsArr.splice(postToRemove, 1);
+      this.scrollArr.splice(postToRemove, 1);
     }
   }
 
@@ -55,7 +57,7 @@ export class HomeComponent implements OnInit {
       body: post.body,
     };
     this._service.addNewPost(newPost).subscribe((resp) => {
-      this.allPostsArr.unshift(resp);
+      this.scrollArr.unshift(resp);
       this._spinner.hide();
       this.successMessage = true;
     });
@@ -75,10 +77,34 @@ export class HomeComponent implements OnInit {
       // for demonstration purposes we will remove old post, and then
       this.deletePost(this.editThisPost);
       // we will add to top of the list new post that we receive as a response
-      this.allPostsArr.unshift(resp);
+      this.scrollArr.unshift(resp);
 
       this._spinner.hide();
       this.successEdit = true;
     });
+  }
+
+  onScroll() {
+    this.getTenPosts();
+  }
+
+  // since we don't have option to send new query with page number
+  // here is a custom function to get the next ten posts on scroll
+  getTenPosts(): void {
+    this.allPostsArr.forEach((post) => {
+      if (post.userId === this.page) {
+        this.scrollArr.push(post);
+      }
+    });
+    this.page++;
+  }
+
+  loadEverything(): void {
+    this._spinner.show();
+    this.loadAllPosts();
+    setTimeout(() => {
+      this.getTenPosts();
+      this._spinner.hide();
+    }, 500);
   }
 }

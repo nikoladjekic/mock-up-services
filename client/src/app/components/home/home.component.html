@@ -1,42 +1,46 @@
-<!-- main table with the list of posts -->
-<div class="container my-5">
-  <div class="accordion" id="accordionId">
+<!-- scrollable container div -->
+<div class="scroll-window" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+  (scrolled)="onScroll()" [scrollWindow]="false">
 
-    <div class="row m-2">
-      <h2><em>Click on the title to read more</em></h2>
-      <button class="btn btn-sm btn-secondary ml-auto" data-toggle="modal" data-target="#newPostModal">
-        <i class="fas fa-plus"></i> Add New Post
-      </button>
-    </div>
+  <!-- main table with the list of posts -->
+  <div class="container my-5">
+    <div class="accordion" id="accordionId">
 
-    <div class="card" *ngFor="let post of allPostsArr; let i=index">
-      <!-- card header -->
-      <div class="card-header" id="postHeading">
-        <h2 class="mb-0">
-          <button class="btn btn-block text-left" type="button" data-toggle="collapse"
-            attr.data-target="#postid-{{post.id}}" aria-expanded="false" attr.aria-controls="postid-{{post.id}}">
-            {{ i+1 }}) {{ post.title }}
-          </button>
-        </h2>
-      </div>
-
-      <!-- card body -->
-      <div id="postid-{{post.id}}" class="collapse hide" aria-labelledby="postHeading" data-parent="#accordionId">
-        <div class="card-body"> {{ post.body }} </div>
-
-        <button type="button" class="btn btn-info m-3" data-toggle="modal" data-target="#editPostModal"
-          (click)="editPost(post)"> <i class="fas fa-edit"></i> Edit
+      <div class="row m-2">
+        <h2><em>Click on the title to read more</em></h2>
+        <button class="btn btn-sm btn-secondary ml-auto" data-toggle="modal" data-target="#newPostModal">
+          <i class="fas fa-plus"></i> Add New Post
         </button>
-
-        <button type="button" class="btn btn-danger float-right m-3" (click)="deletePost(post)">
-          <i class="fas fa-trash-alt"></i> Delete </button>
       </div>
+
+      <div class="card" *ngFor="let post of scrollArr; let i=index">
+        <!-- card header -->
+        <div class="card-header" id="postHeading">
+          <h2 class="mb-0">
+            <button class="btn btn-block text-left" type="button" data-toggle="collapse"
+              attr.data-target="#postid-{{post.id}}" aria-expanded="false" attr.aria-controls="postid-{{post.id}}">
+              {{ i+1 }}) {{ post.title }}
+            </button>
+          </h2>
+        </div>
+
+        <!-- card body with infinite scroll -->
+        <div id="postid-{{post.id}}" class="collapse hide" aria-labelledby="postHeading" data-parent="#accordionId">
+          <div class="card-body"> {{ post.body }} </div>
+
+          <button type="button" class="btn btn-info m-3" data-toggle="modal" data-target="#editPostModal"
+            (click)="editPost(post)"> <i class="fas fa-edit"></i> Edit
+          </button>
+
+          <button type="button" class="btn btn-danger float-right m-3" (click)="deletePost(post)">
+            <i class="fas fa-trash-alt"></i> Delete </button>
+        </div>
+      </div>
+
     </div>
-
   </div>
+
 </div>
-
-
 
 <!-- below is not-renderable stuff on init -->
 
@@ -104,10 +108,6 @@
               <!-- success message -->
               <p *ngIf="addNewPostForm.submitted && successMessage" class="text-success">
                 <i class="fas fa-check"></i> New post successfully added
-              </p>
-              <!-- error message -->
-              <p *ngIf="addNewPostForm.submitted && errorMessage" class="text-danger">
-                <i class="fas fa-exclamation-circle"></i> An error occurred, please try again
               </p>
             </div>
 
@@ -192,10 +192,6 @@
               <!-- success message -->
               <p *ngIf="successEdit" class="text-success">
                 <i class="fas fa-check"></i> Post successfully edited
-              </p>
-              <!-- error message -->
-              <p *ngIf="editPostForm.submitted && errorMessage" class="text-danger">
-                <i class="fas fa-exclamation-circle"></i> An error occurred, please try again
               </p>
             </div>
 

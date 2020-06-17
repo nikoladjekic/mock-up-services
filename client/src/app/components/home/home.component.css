@@ -1,0 +1,4 @@
+.scroll-window {
+  height: 80vh;
+  overflow: scroll;
+}
