@@ -10,7 +10,7 @@
     </div>
 
     <div class="card" *ngFor="let post of allPostsArr; let i=index">
-
+      <!-- card header -->
       <div class="card-header" id="postHeading">
         <h2 class="mb-0">
           <button class="btn btn-block text-left" type="button" data-toggle="collapse"
@@ -20,17 +20,26 @@
         </h2>
       </div>
 
+      <!-- card body -->
       <div id="postid-{{post.id}}" class="collapse hide" aria-labelledby="postHeading" data-parent="#accordionId">
         <div class="card-body"> {{ post.body }} </div>
-        <button type="button" class="btn btn-info m-3"><i class="fas fa-edit"></i> Edit</button>
+
+        <button type="button" class="btn btn-info m-3" data-toggle="modal" data-target="#editPostModal"
+          (click)="editPost(post)"> <i class="fas fa-edit"></i> Edit
+        </button>
+
         <button type="button" class="btn btn-danger float-right m-3" (click)="deletePost(post)">
           <i class="fas fa-trash-alt"></i> Delete </button>
       </div>
-
     </div>
 
   </div>
 </div>
+
+
+
+<!-- below is not-renderable stuff on init -->
+
 
 
 <!-- whole page spinner/loader -->
@@ -60,12 +69,6 @@
           <div class="form-group">
             <label for="userId" class="text-secondary">User ID</label>
             <input type="number" class="form-control" id="userId" name="userId" ngModel>
-          </div>
-
-          <!-- id -->
-          <div class="form-group">
-            <label for="id" class="text-secondary">ID</label>
-            <input type="number" class="form-control" id="id" name="id" ngModel>
           </div>
 
           <!-- post title -->
@@ -111,6 +114,94 @@
             <div class="col text-right">
               <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
                 (click)="addNewPostForm.form.reset()"> <i class="fas fa-times"></i> Close
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--
+**** edit post modal ****
+-->
+<div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalTitle"
+  aria-hidden="true" *ngIf="editThisPost">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3> <i class="fas fa-edit"></i> Edit Post </h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"> &times; </span>
+        </button>
+      </div>
+
+      <div class="modal-body mt-3">
+        <form (ngSubmit)="onSubmit(editPostForm.value)" #editPostForm="ngForm" method="POST">
+
+          <!-- userId -->
+          <div class="form-group">
+            <label for="userId" class="text-secondary">User ID</label>
+            <input type="number" class="form-control" id="userId" name="userId" [(ngModel)]="editThisPost.userId">
+          </div>
+
+          <!-- Id -->
+          <div class="form-group">
+            <label for="id" class="text-secondary">Post ID</label>
+            <input type="number" class="form-control" id="id" name="id" [(ngModel)]="editThisPost.id">
+          </div>
+
+          <!-- post title -->
+          <div class="form-group">
+            <label for="title" class="text-secondary">*Post Title</label>
+            <input type="text" class="form-control" id="title" name="title" #title="ngModel"
+              [class.is-invalid]="title.touched && title.errors" required [(ngModel)]="editThisPost.title">
+            <small class="text-danger" *ngIf="title.touched && title.errors?.required">
+              Post title is required</small>
+          </div>
+
+          <!-- post body -->
+          <div class="form-group">
+            <label for="body" class="text-secondary">*Post Body</label>
+            <input type="text" class="form-control" id="body" name="body" #body="ngModel"
+              [class.is-invalid]="body.touched && body.errors" required [(ngModel)]="editThisPost.body">
+            <small class="text-danger" *ngIf="body.touched && body.errors?.required">
+              Post body is required</small>
+          </div>
+
+          <p class="text-secondary my-4">Info:&nbsp; All fields with asterisk (*) are required</p>
+
+          <!-- buttons + info messages -->
+          <div class="row">
+
+            <div class="col text-left">
+              <button type="button" class="btn btn-outline-info" [disabled]="!editPostForm.form.valid"
+                (click)="confirmEdit()">
+                <i class="fas fa-check-circle"></i> Confirm
+              </button>
+            </div>
+
+            <div class="col">
+              <!-- success message -->
+              <p *ngIf="successEdit" class="text-success">
+                <i class="fas fa-check"></i> Post successfully edited
+              </p>
+              <!-- error message -->
+              <p *ngIf="editPostForm.submitted && errorMessage" class="text-danger">
+                <i class="fas fa-exclamation-circle"></i> An error occurred, please try again
+              </p>
+            </div>
+
+            <div class="col text-right">
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                <i class="fas fa-times"></i> Close
               </button>
             </div>
 
